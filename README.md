@@ -1,37 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js 16 template
 
-## Getting Started
+The most important resource of every person is their time. Their is no doubt. Losing 15 minutes installing and configuring the same things takes down your workflow and inspiration.
 
-First, run the development server:
+This template was build to simplify that. Most of my work is with the same stack so I use this resources a lot.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Stack
+
+As the title says, it is for Next.js; specially for the 16.0 version (the most advanced to this day August 1st 2026).
+But that is not the only modern technology.
+
+- `Drizzle ORM`: For managing the backend I'll use drizzle, its simple, fast and eficcient; combined with Neon for free hosting and postgrSQL.
+- `Better-auth`: Mananing safe sign-in, sign-up, password recovery, external providers, etc.
+- `Shadcn`: Beautiful styled and editable components, simplifies lots of things.
+
+---
+
+## Features
+
+Is based on **feature based** architecture. All in `/src` but separate on its own `features/*/**`.
+Includes helpers for server actions.
+
+### Errors.ts
+
+Its located on `/src/shared/lib/errors.ts`. Declares a custom class called AppError, this helps displaying use-full error messages, its and extension of the default Error instance, you can customize it! When writing functions use this instead of _Error()_
+
+```ts
+import { AppError } from "@/shared/lib/errors";
+
+export const myFunction = (params: any) => {
+  const error = true;
+
+  if (error) throw new AppError("Something went work!!");
+};
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Actions.ts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+One of the most crucial features of Next.js are the server actions, which allows you to communicate safely from the client to the server. The template includes helpers for this too!
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Most of the logic in your actions will repeat, so it's a good practice to wrap your actions to simplify them. I only added 1 action wrapper: the `logInAction`. It's design to be used only by auth users, if someone doesn't have a session the action triggers an error using the AppError class.
 
-## Learn More
+```ts
+"use server";
 
-To learn more about Next.js, take a look at the following resources:
+import { logInAction } from "@/shared/lib/actions";
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+export const action = logInAction(async () => {
+  // If the user is log in the action works, if not an error will occur
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  console.log("Do something...");
+});
+```
 
-## Deploy on Vercel
+### client-actions.ts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Lastly, client-actions.ts. This helps you notify the user something. When you call your server actions from a client component use the function `showResponse()` to display a toast to the user. It already discriminate when its and error or a success.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# better-auth-drizzle-neon-template
+```tsx
+"use client";
+import { serverAction } from "@/actions"; // Generic route, use your feature based route
+
+export function MyComponent() {
+  const action = async () => {
+    showResponse(await serverAction());
+  };
+
+  return (
+    <div>
+      <button onClick={action}>Display the toast!</button>
+    </div>
+  );
+}
+```
