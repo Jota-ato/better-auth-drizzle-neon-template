@@ -1,10 +1,11 @@
 import { Check } from "lucide-react";
+import Image from "next/image";
 
 const stack = [
   { name: "next", status: "16.0.0" },
   { name: "typescript", status: "strict" },
   { name: "tailwindcss", status: "v4" },
-  { name: "drizzle-orm", status: "conectado" },
+  { name: "drizzle-orm", status: "1.0" },
   { name: "better-auth", status: "configurado" },
 ];
 
@@ -25,22 +26,12 @@ export function Welcome() {
       />
 
       <section className="relative mx-auto flex h-screen w-9/10 max-w-xl flex-col items-center justify-center gap-8 text-center">
-        <svg
-          width="26"
-          height="26"
-          viewBox="0 0 28 28"
-          fill="none"
-          className="text-primary"
-        >
-          <circle cx="6" cy="22" r="3" fill="currentColor" />
-          <circle cx="22" cy="22" r="3" fill="currentColor" />
-          <circle cx="14" cy="6" r="3" fill="currentColor" />
-          <path
-            d="M8.5 20L12 8.5M19.5 20L16 8.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-        </svg>
+        <Image 
+          src="/next.svg"
+          alt="Next.js"
+          width={100}
+          height={100}
+        />
 
         <div>
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
